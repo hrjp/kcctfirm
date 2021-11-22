@@ -18,7 +18,7 @@
 #include <Encoders.h>
 #include <cout.h>
 #include "Vector.h"
-#include "PID_lib.h"
+#include "PIDF.h"
 #include "Pixy_analog.h"
 #include "Odometry.h"
 //#include "GPS.h"
@@ -67,8 +67,11 @@ Vector target_vel;
 //PID r_vel(100.0,540,350);
 //PID l_vel(100.0,540,350);
 
-PID r_vel(80.0,440,350);
-PID l_vel(80.0,440,350);
+//PID r_vel(80.0,440,350);
+//PID l_vel(80.0,440,350);
+
+PID r_vel(80.0,340,350,10.0);
+PID l_vel(80.0,340,350,10.0);
 
 PID pixypid(0.3,0.0,0.1);
 PID dispid(100.0,0.0,10);
