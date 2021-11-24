@@ -70,8 +70,8 @@ Vector target_vel;
 //PID r_vel(80.0,440,350);
 //PID l_vel(80.0,440,350);
 
-PID r_vel(80.0,340,350,10.0);
-PID l_vel(80.0,340,350,10.0);
+PID r_vel(80.0,440,350,250.0);
+PID l_vel(80.0,440,350,250.0);
 
 PID pixypid(0.3,0.0,0.1);
 PID dispid(100.0,0.0,10);
@@ -90,7 +90,7 @@ void messageCb(const geometry_msgs::Twist& twist) {
     //target_vel.y=2.0*twist.linear.x;
     //target_vel.yaw=0.6*twist.angular.z;
     target_vel.y=twist.linear.x;
-    target_vel.yaw=twist.angular.z;
+    target_vel.yaw=twist.angular.z*1.5;
     target_vel.x=twist.linear.y;
 
   if(!digitalRead(e_stop_pin)){
