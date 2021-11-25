@@ -32,10 +32,10 @@
 ENCODERS Encoders(45,48);
 Gyro_9axis gyro;
 int x, y, z;
-MD13S lmo(6, 5); //(PWM_PIN,invert_PIN)
-MD13S rmo(8,7);
-PS3I2C ps(0x73);
-PS3I2C psm(0x74);
+MD13S rmo(22,23); //(PWM_PIN,invert_PIN)
+MD13S lmo(20,21);
+PS3I2C ps(0x74);
+PS3I2C psm(0x73);
 
 //新機体
 const double wheel_width=555.0;
@@ -81,7 +81,7 @@ bool using_cmd_vel;
 //double human_dis;
 //Pixy_analog pixy(A7);
 
-const int e_stop_pin=22;
+const int e_stop_pin=25;
 
 void messageCb(const geometry_msgs::Twist& twist) {
   //const float linear_x = 6*twist.linear.x;
@@ -132,7 +132,7 @@ void setup() {
   digitalWrite(13,HIGH);
   nh.initNode();
   nh.subscribe(sub);
-  pinMode(30,INPUT_PULLUP);
+  pinMode(26,INPUT_PULLUP);
   Encoders.Encoder1.set(8192);
   Encoders.Encoder2.set(8192);
   Encoders.set(8192);
@@ -183,7 +183,7 @@ void loop() {
   //pixy.update();
 
   //手動と自動の切り替えスイッチ
-  using_cmd_vel=digitalRead(30);
+  using_cmd_vel=digitalRead(26);
 
 //エンコーダから読み取ったタイヤの速度[m/s]
 double r_rot=-Encoders.Encoder1.read_rpm()*PI/60.0*wheel_size/1000.0;
