@@ -213,15 +213,14 @@ namespace roseus
       *(outbuffer + offset + 3) = (this->uint64_data_length >> (8 * 3)) & 0xFF;
       offset += sizeof(this->uint64_data_length);
       for( uint32_t i = 0; i < uint64_data_length; i++){
-      union {
-        uint64_t real;
-        uint32_t base;
-      } u_uint64_datai;
-      u_uint64_datai.real = this->uint64_data[i];
-      *(outbuffer + offset + 0) = (u_uint64_datai.base >> (8 * 0)) & 0xFF;
-      *(outbuffer + offset + 1) = (u_uint64_datai.base >> (8 * 1)) & 0xFF;
-      *(outbuffer + offset + 2) = (u_uint64_datai.base >> (8 * 2)) & 0xFF;
-      *(outbuffer + offset + 3) = (u_uint64_datai.base >> (8 * 3)) & 0xFF;
+      *(outbuffer + offset + 0) = (this->uint64_data[i] >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (this->uint64_data[i] >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (this->uint64_data[i] >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (this->uint64_data[i] >> (8 * 3)) & 0xFF;
+      *(outbuffer + offset + 4) = (this->uint64_data[i] >> (8 * 4)) & 0xFF;
+      *(outbuffer + offset + 5) = (this->uint64_data[i] >> (8 * 5)) & 0xFF;
+      *(outbuffer + offset + 6) = (this->uint64_data[i] >> (8 * 6)) & 0xFF;
+      *(outbuffer + offset + 7) = (this->uint64_data[i] >> (8 * 7)) & 0xFF;
       offset += sizeof(this->uint64_data[i]);
       }
       *(outbuffer + offset + 0) = (this->uint8_data_length >> (8 * 0)) & 0xFF;
@@ -455,16 +454,14 @@ namespace roseus
         this->uint64_data = (uint64_t*)realloc(this->uint64_data, uint64_data_lengthT * sizeof(uint64_t));
       uint64_data_length = uint64_data_lengthT;
       for( uint32_t i = 0; i < uint64_data_length; i++){
-      union {
-        uint64_t real;
-        uint32_t base;
-      } u_st_uint64_data;
-      u_st_uint64_data.base = 0;
-      u_st_uint64_data.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
-      u_st_uint64_data.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
-      u_st_uint64_data.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
-      u_st_uint64_data.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
-      this->st_uint64_data = u_st_uint64_data.real;
+      this->st_uint64_data =  ((uint64_t) (*(inbuffer + offset)));
+      this->st_uint64_data |= ((uint64_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      this->st_uint64_data |= ((uint64_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      this->st_uint64_data |= ((uint64_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->st_uint64_data |= ((uint64_t) (*(inbuffer + offset + 4))) << (8 * 4);
+      this->st_uint64_data |= ((uint64_t) (*(inbuffer + offset + 5))) << (8 * 5);
+      this->st_uint64_data |= ((uint64_t) (*(inbuffer + offset + 6))) << (8 * 6);
+      this->st_uint64_data |= ((uint64_t) (*(inbuffer + offset + 7))) << (8 * 7);
       offset += sizeof(this->st_uint64_data);
         memcpy( &(this->uint64_data[i]), &(this->st_uint64_data), sizeof(uint64_t));
       }

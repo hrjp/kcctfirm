@@ -48,7 +48,7 @@ namespace moveit_msgs
     }
 
     const char * getType(){ return "moveit_msgs/PickupAction"; };
-    const char * getMD5(){ return "f5aa574f57e5d9cf7d466d5913039489"; };
+    const char * getMD5(){ return "966c9238fcaad4ba8d20e116b676ccc1"; };
 
   };
 

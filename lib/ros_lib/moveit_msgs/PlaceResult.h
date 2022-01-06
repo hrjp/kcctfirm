@@ -30,13 +30,16 @@ namespace moveit_msgs
       _trajectory_descriptions_type * trajectory_descriptions;
       typedef moveit_msgs::PlaceLocation _place_location_type;
       _place_location_type place_location;
+      typedef float _planning_time_type;
+      _planning_time_type planning_time;
 
     PlaceResult():
       error_code(),
       trajectory_start(),
       trajectory_stages_length(0), trajectory_stages(NULL),
       trajectory_descriptions_length(0), trajectory_descriptions(NULL),
-      place_location()
+      place_location(),
+      planning_time(0)
     {
     }
 
@@ -66,6 +69,7 @@ namespace moveit_msgs
       offset += length_trajectory_descriptionsi;
       }
       offset += this->place_location.serialize(outbuffer + offset);
+      offset += serializeAvrFloat64(outbuffer + offset, this->planning_time);
       return offset;
     }
 
@@ -107,11 +111,12 @@ namespace moveit_msgs
         memcpy( &(this->trajectory_descriptions[i]), &(this->st_trajectory_descriptions), sizeof(char*));
       }
       offset += this->place_location.deserialize(inbuffer + offset);
+      offset += deserializeAvrFloat64(inbuffer + offset, &(this->planning_time));
      return offset;
     }
 
     const char * getType(){ return "moveit_msgs/PlaceResult"; };
-    const char * getMD5(){ return "da2eea14de05cf0aa280f150a84ded50"; };
+    const char * getMD5(){ return "94bc2148a619282cbe09156013d6c4c9"; };
 
   };
 

@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "ros/msg.h"
+#include "std_msgs/ColorRGBA.h"
 
 namespace jsk_rviz_plugins
 {
@@ -22,6 +23,10 @@ namespace jsk_rviz_plugins
       _menus_type * menus;
       typedef const char* _title_type;
       _title_type title;
+      typedef std_msgs::ColorRGBA _bg_color_type;
+      _bg_color_type bg_color;
+      typedef std_msgs::ColorRGBA _fg_color_type;
+      _fg_color_type fg_color;
       enum { ACTION_SELECT = 0 };
       enum { ACTION_CLOSE = 1 };
 
@@ -29,7 +34,9 @@ namespace jsk_rviz_plugins
       action(0),
       current_index(0),
       menus_length(0), menus(NULL),
-      title("")
+      title(""),
+      bg_color(),
+      fg_color()
     {
     }
 
@@ -68,6 +75,8 @@ namespace jsk_rviz_plugins
       offset += 4;
       memcpy(outbuffer + offset, this->title, length_title);
       offset += length_title;
+      offset += this->bg_color.serialize(outbuffer + offset);
+      offset += this->fg_color.serialize(outbuffer + offset);
       return offset;
     }
 
@@ -119,11 +128,13 @@ namespace jsk_rviz_plugins
       inbuffer[offset+length_title-1]=0;
       this->title = (char *)(inbuffer + offset-1);
       offset += length_title;
+      offset += this->bg_color.deserialize(inbuffer + offset);
+      offset += this->fg_color.deserialize(inbuffer + offset);
      return offset;
     }
 
     const char * getType(){ return "jsk_rviz_plugins/OverlayMenu"; };
-    const char * getMD5(){ return "fed3c7e9788f7ee37908107a2597b619"; };
+    const char * getMD5(){ return "517426ba068ca022d86cf2c56c98889f"; };
 
   };
 

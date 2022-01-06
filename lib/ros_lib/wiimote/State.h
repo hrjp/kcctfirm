@@ -218,15 +218,14 @@ namespace wiimote
       *(outbuffer + offset + 2) = (this->zeroing_time.nsec >> (8 * 2)) & 0xFF;
       *(outbuffer + offset + 3) = (this->zeroing_time.nsec >> (8 * 3)) & 0xFF;
       offset += sizeof(this->zeroing_time.nsec);
-      union {
-        uint64_t real;
-        uint32_t base;
-      } u_errors;
-      u_errors.real = this->errors;
-      *(outbuffer + offset + 0) = (u_errors.base >> (8 * 0)) & 0xFF;
-      *(outbuffer + offset + 1) = (u_errors.base >> (8 * 1)) & 0xFF;
-      *(outbuffer + offset + 2) = (u_errors.base >> (8 * 2)) & 0xFF;
-      *(outbuffer + offset + 3) = (u_errors.base >> (8 * 3)) & 0xFF;
+      *(outbuffer + offset + 0) = (this->errors >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (this->errors >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (this->errors >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (this->errors >> (8 * 3)) & 0xFF;
+      *(outbuffer + offset + 4) = (this->errors >> (8 * 4)) & 0xFF;
+      *(outbuffer + offset + 5) = (this->errors >> (8 * 5)) & 0xFF;
+      *(outbuffer + offset + 6) = (this->errors >> (8 * 6)) & 0xFF;
+      *(outbuffer + offset + 7) = (this->errors >> (8 * 7)) & 0xFF;
       offset += sizeof(this->errors);
       return offset;
     }
@@ -355,16 +354,14 @@ namespace wiimote
       this->zeroing_time.nsec |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
       this->zeroing_time.nsec |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
       offset += sizeof(this->zeroing_time.nsec);
-      union {
-        uint64_t real;
-        uint32_t base;
-      } u_errors;
-      u_errors.base = 0;
-      u_errors.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
-      u_errors.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
-      u_errors.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
-      u_errors.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
-      this->errors = u_errors.real;
+      this->errors =  ((uint64_t) (*(inbuffer + offset)));
+      this->errors |= ((uint64_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      this->errors |= ((uint64_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      this->errors |= ((uint64_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->errors |= ((uint64_t) (*(inbuffer + offset + 4))) << (8 * 4);
+      this->errors |= ((uint64_t) (*(inbuffer + offset + 5))) << (8 * 5);
+      this->errors |= ((uint64_t) (*(inbuffer + offset + 6))) << (8 * 6);
+      this->errors |= ((uint64_t) (*(inbuffer + offset + 7))) << (8 * 7);
       offset += sizeof(this->errors);
      return offset;
     }

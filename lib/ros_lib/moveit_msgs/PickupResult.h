@@ -30,13 +30,16 @@ namespace moveit_msgs
       _trajectory_descriptions_type * trajectory_descriptions;
       typedef moveit_msgs::Grasp _grasp_type;
       _grasp_type grasp;
+      typedef float _planning_time_type;
+      _planning_time_type planning_time;
 
     PickupResult():
       error_code(),
       trajectory_start(),
       trajectory_stages_length(0), trajectory_stages(NULL),
       trajectory_descriptions_length(0), trajectory_descriptions(NULL),
-      grasp()
+      grasp(),
+      planning_time(0)
     {
     }
 
@@ -66,6 +69,7 @@ namespace moveit_msgs
       offset += length_trajectory_descriptionsi;
       }
       offset += this->grasp.serialize(outbuffer + offset);
+      offset += serializeAvrFloat64(outbuffer + offset, this->planning_time);
       return offset;
     }
 
@@ -107,11 +111,12 @@ namespace moveit_msgs
         memcpy( &(this->trajectory_descriptions[i]), &(this->st_trajectory_descriptions), sizeof(char*));
       }
       offset += this->grasp.deserialize(inbuffer + offset);
+      offset += deserializeAvrFloat64(inbuffer + offset, &(this->planning_time));
      return offset;
     }
 
     const char * getType(){ return "moveit_msgs/PickupResult"; };
-    const char * getMD5(){ return "23c6d8bf0580f4bc8f7a8e1f59b4b6b7"; };
+    const char * getMD5(){ return "c1e72234397d9de0761966243e264774"; };
 
   };
 

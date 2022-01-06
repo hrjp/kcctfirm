@@ -48,7 +48,7 @@ namespace moveit_msgs
     }
 
     const char * getType(){ return "moveit_msgs/PlaceActionResult"; };
-    const char * getMD5(){ return "d7a2ac2299b16bfd9120d347472b7cdc"; };
+    const char * getMD5(){ return "a93c9107fd23796469241f1d40422dfa"; };
 
   };
 

@@ -38,6 +38,8 @@
 #include <Arduino.h>
 #if defined(ESP8266)
   #include <ESP8266WiFi.h>
+#elif defined(ESP32)
+  #include <WiFi.h> // Using Espressif's WiFi.h
 #else
   #include <SPI.h>
   #include <Ethernet.h>
@@ -57,7 +59,7 @@ public:
 
   IPAddress getLocalIP()
   {
-#if defined(ESP8266)
+#if defined(ESP8266) or defined(ESP32)
     return tcp_.localIP();
 #else
     return Ethernet.localIP();
@@ -66,6 +68,10 @@ public:
 
   void init()
   {
+    if(tcp_.connected())
+    {
+      tcp_.stop();
+    }
     tcp_.connect(server_, serverPort_);
   }
 
@@ -76,6 +82,7 @@ public:
     }
     else
     {
+      tcp_.stop();
       tcp_.connect(server_, serverPort_);
     }
     return -1;
@@ -91,8 +98,13 @@ public:
     return millis();
   }
 
+  bool connected()
+  {
+    return tcp_.connected();
+  }
+
 protected:
-#if defined(ESP8266)
+#if defined(ESP8266) or defined(ESP32)
   WiFiClient tcp_;
 #else
   EthernetClient tcp_;
