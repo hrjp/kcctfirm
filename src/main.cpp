@@ -43,6 +43,9 @@ const double encoder_ppr=8192;
 const double wheel_size=315.0;//空気圧で変動
 Odometry odom(wheel_width,encoder_ppr,wheel_size*0.931);
 
+const double odometer_wheel_size=144*0.994;
+Odometry odometer(wheel_width,encoder_ppr,odometer_wheel_size);
+
 int lp=1500,rp=1500;
 double pos_x,pos_y,angle_offset,angle_deg,angle_rad;
 
@@ -120,6 +123,8 @@ ros::Subscriber<geometry_msgs::Twist> sub("final_cmd_vel", &messageCb);
 //ros::Publisher float_pub("float_sensor_data", &float_pub_array);
 RosArrayPublisher<std_msgs::Float32MultiArray> float_pub(nh,"float_sensor_data",20);
 
+RosArrayPublisher<std_msgs::Float32MultiArray> odomerter_pub(nh,"odomerter_data",5);
+
 
 
 void setup() {
@@ -128,13 +133,14 @@ void setup() {
    Wire.setSCL(33);
    //Wire.setClock(400000UL);
    gyro.set();
-  pinMode(13,OUTPUT);
-  digitalWrite(13,HIGH);
+  //pinMode(13,OUTPUT);
+  //digitalWrite(13,HIGH);
   nh.initNode();
   nh.subscribe(sub);
   pinMode(30,INPUT_PULLUP);
   Encoders.Encoder1.set(8192);
   Encoders.Encoder2.set(8192);
+  Encoders.Encoder3.set(8192);
   Encoders.set(8192);
   Serial.begin(57600);
 
@@ -162,6 +168,9 @@ void loop() {
   psm.update();
   odom.update(Encoders.Encoder2.read_pulse(),Encoders.Encoder1.read_pulse(),gyro.rad(),-gyro.getRoll());
   odom.update2d(Encoders.Encoder2.read_pulse(),Encoders.Encoder1.read_pulse(),gyro.rad());
+
+  odometer.update(-Encoders.Encoder3.read_pulse(),Encoders.Encoder3.read_pulse(),gyro.rad(),-gyro.getRoll());
+  odometer.update2d(-Encoders.Encoder3.read_pulse(),Encoders.Encoder3.read_pulse(),gyro.rad());
 
   static bool useing_line_con=false;
   static int A_Ly=0;
@@ -330,6 +339,19 @@ double l_target=target_vel.y-0.5*wheel_width/1000.0*target_vel.yaw;
   float_pub.array.data[18]=odom.vec2d.x;//x
   float_pub.array.data[19]=odom.vec2d.y;//y
   float_pub.publish();
+
+
+  //odometer
+  //3d odom
+  odomerter_pub.array.data[0]=odometer.vec.x;
+  odomerter_pub.array.data[1]=odometer.vec.y;
+  odomerter_pub.array.data[2]=odometer.vec.z;
+  //2d odom
+  odomerter_pub.array.data[3]=odometer.vec.x;
+  odomerter_pub.array.data[4]=odometer.vec.y;
+  odomerter_pub.publish();
+
+  //Serial.println(Encoders.Encoder3.read_pulse());
   //quat
   //publishするデータの準備
   //TF map->base_link
