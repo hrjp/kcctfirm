@@ -123,7 +123,7 @@ ros::Subscriber<geometry_msgs::Twist> sub("final_cmd_vel", &messageCb);
 //ros::Publisher float_pub("float_sensor_data", &float_pub_array);
 RosArrayPublisher<std_msgs::Float32MultiArray> float_pub(nh,"float_sensor_data",20);
 
-RosArrayPublisher<std_msgs::Float32MultiArray> odomerter_pub(nh,"odomerter_data",5);
+RosArrayPublisher<std_msgs::Float32MultiArray> odomerter_pub(nh,"odomerter_data",6);
 
 
 
@@ -342,6 +342,7 @@ double l_target=target_vel.y-0.5*wheel_width/1000.0*target_vel.yaw;
 
 
   //odometer
+  double body_vel_odometer=(-Encoders.Encoder3.read_rpm()-Encoders.Encoder3.read_rpm())*PI*odometer_wheel_size/(60.0*1000.0);
   //3d odom
   odomerter_pub.array.data[0]=odometer.vec.x;
   odomerter_pub.array.data[1]=odometer.vec.y;
@@ -349,6 +350,7 @@ double l_target=target_vel.y-0.5*wheel_width/1000.0*target_vel.yaw;
   //2d odom
   odomerter_pub.array.data[3]=odometer.vec.x;
   odomerter_pub.array.data[4]=odometer.vec.y;
+  odomerter_pub.array.data[5]=body_vel_odometer;
   odomerter_pub.publish();
 
   //Serial.println(Encoders.Encoder3.read_pulse());
